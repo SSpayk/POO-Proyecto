@@ -1,0 +1,34 @@
+package logica;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Tipo {
+	private String nombre;
+	private List<Item> items;
+	
+	public Tipo(String nombre) {
+		this.nombre = nombre;
+		this.items = new ArrayList<Item>();
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
+	public List<Item> getItems() {
+	    return items;
+	}
+	
+	public void agregarItemTipo(Item item) {
+		items.add(item);
+	}
+	
+	public void borrarItemTipo(Item item) {
+	    items.remove(item);
+	}
+}

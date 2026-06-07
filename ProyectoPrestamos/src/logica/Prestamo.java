@@ -1,6 +1,5 @@
 package logica;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +8,15 @@ public class Prestamo {
 	private LocalDateTime fecha;
 	private Usuario usuario;
 	private List<Item> items;
+	private Alerta alerta;
 	
 	
-	public Prestamo(LocalDateTime fecha) {
+	public Prestamo(Usuario usuario) {
+		this.usuario = usuario;
 		this.fecha = LocalDateTime.now();
 		this.items = new ArrayList<Item>();
+		this.alerta = null;
+		
 	}
 
 	public LocalDateTime getFecha() {
@@ -36,8 +39,23 @@ public class Prestamo {
 		for(Item i: items) {
 			i.eliminarDePrestamo();
 		}
-		i.clear();
+		items.clear(); 
 	}
 	
-
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
+	public Alerta getAlerta() {
+		return alerta;
+	}
+	
+	public void setAlerta(Alerta alerta) {
+		this.alerta = alerta;
+		
+	}
 }

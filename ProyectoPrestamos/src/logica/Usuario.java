@@ -49,5 +49,4 @@ public class Usuario {
 		prestamos.remove(prestamo);
 		
 	}
-	
 }
