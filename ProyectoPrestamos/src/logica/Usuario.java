@@ -40,6 +40,10 @@ public class Usuario {
 		this.correo = correo;
 	}
 	
+	public List<Prestamo> getPrestamos(){
+		return prestamos;
+	}
+	
 	public void agregarPrestamo(Prestamo prestamo) {
 		prestamos.add(prestamo);
 	

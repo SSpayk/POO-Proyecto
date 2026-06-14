@@ -2,6 +2,7 @@ package logica;
 
 import java.time.LocalDateTime;
 
+
 public class Alerta {
 	private LocalDateTime fecha;
 	private Boolean alarmaRecurrente;
