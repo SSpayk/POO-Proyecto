@@ -49,38 +49,38 @@ public class VentanaPrincipal {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		framePrincipal.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
-		JPanel panelUsuario = new JPanel();
-		tabbedPane.addTab("Usuario", null, panelUsuario, null);
-		panelUsuario.setLayout(null);
+		JPanel panelAdministracion = new JPanel();
+		tabbedPane.addTab("Administracion", null, panelAdministracion, null);
+		panelAdministracion.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnCrearUsuario = new JButton("Nuevo");
-		btnCrearUsuario.setBounds(10, 10, 84, 20);
-		panelUsuario.add(btnCrearUsuario);
+		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
+		panelAdministracion.add(tabbedPane_1, BorderLayout.CENTER);
 		
-		JButton btnModificarUsuario = new JButton("Modificar");
-		btnModificarUsuario.setBounds(104, 10, 84, 20);
-		panelUsuario.add(btnModificarUsuario);
+		JPanel panelUsuarios = new JPanel();
+		tabbedPane_1.addTab("Usuarios", null, panelUsuarios, null);
+		panelUsuarios.setLayout(null);
 		
-		JButton btnBorrarUsuario = new JButton("Borrar");
-		btnBorrarUsuario.setBounds(198, 10, 84, 20);
-		panelUsuario.add(btnBorrarUsuario);
+		JButton btnCrearPersona = new JButton("Nuevo");
+		btnCrearPersona.setBounds(10, 10, 84, 20);
+		panelUsuarios.add(btnCrearPersona);
 		
-		JButton btnConsultarUsuario = new JButton("Consultar");
-		btnConsultarUsuario.setBounds(292, 10, 84, 20);
-		panelUsuario.add(btnConsultarUsuario);
+		JButton btnModificarPersona = new JButton("Modificar");
+		btnModificarPersona.setBounds(104, 10, 84, 20);
+		panelUsuarios.add(btnModificarPersona);
 		
-		JPanel panelPrestamo = new JPanel();
-		tabbedPane.addTab("Prestamo", null, panelPrestamo, null);
+		JButton btnBorrarPersona = new JButton("Borrar");
+		btnBorrarPersona.setBounds(198, 10, 84, 20);
+		panelUsuarios.add(btnBorrarPersona);
+		
+		JButton btnConsultarPersona = new JButton("Consultar");
+		btnConsultarPersona.setBounds(292, 10, 84, 20);
+		panelUsuarios.add(btnConsultarPersona);
 		
 		JPanel panelItems = new JPanel();
-		tabbedPane.addTab("Items", null, panelItems, null);
+		tabbedPane_1.addTab("Items", null, panelItems, null);
 		panelItems.setLayout(null);
 		
 		JButton btnCrearItem = new JButton("Nuevo");
-		btnCrearItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		btnCrearItem.setBounds(10, 10, 84, 20);
 		panelItems.add(btnCrearItem);
 		
@@ -95,5 +95,68 @@ public class VentanaPrincipal {
 		JButton btnConsultarItem = new JButton("Consultar");
 		btnConsultarItem.setBounds(292, 10, 84, 20);
 		panelItems.add(btnConsultarItem);
+		
+		JPanel panelCategorias = new JPanel();
+		tabbedPane_1.addTab("Categorias", null, panelCategorias, null);
+		panelCategorias.setLayout(null);
+		
+		JButton btnCrearCategoria = new JButton("Nueva");
+		btnCrearCategoria.setBounds(10, 10, 84, 20);
+		panelCategorias.add(btnCrearCategoria);
+		
+		JButton btnModificarCategoria = new JButton("Modificar");
+		btnModificarCategoria.setBounds(104, 10, 84, 20);
+		panelCategorias.add(btnModificarCategoria);
+		
+		JButton btnBorrarCategoria = new JButton("Borrar");
+		btnBorrarCategoria.setBounds(198, 10, 84, 20);
+		panelCategorias.add(btnBorrarCategoria);
+		
+		JButton btnConsultarCategoria = new JButton("Consultar");
+		btnConsultarCategoria.setBounds(292, 10, 84, 20);
+		panelCategorias.add(btnConsultarCategoria);
+		
+		JPanel panelTipos = new JPanel();
+		tabbedPane_1.addTab("Tipos", null, panelTipos, null);
+		panelTipos.setLayout(null);
+		
+		JButton btnCrearTipo = new JButton("Nuevo");
+		btnCrearTipo.setBounds(10, 10, 84, 20);
+		panelTipos.add(btnCrearTipo);
+		
+		JButton btnModificarTipo = new JButton("Modificar");
+		btnModificarTipo.setBounds(104, 10, 84, 20);
+		panelTipos.add(btnModificarTipo);
+		
+		JButton btnBorrarTipo = new JButton("Borrar");
+		btnBorrarTipo.setBounds(198, 10, 84, 20);
+		panelTipos.add(btnBorrarTipo);
+		
+		JButton btnConsultarTipo = new JButton("Consultar");
+		btnConsultarTipo.setBounds(292, 10, 84, 20);
+		panelTipos.add(btnConsultarTipo);
+		
+		JPanel panelPrestamo = new JPanel();
+		tabbedPane.addTab("Prestamo", null, panelPrestamo, null);
+		
+		JPanel panelReportes = new JPanel();
+		tabbedPane.addTab("Reportes", null, panelReportes, null);
+		panelReportes.setLayout(null);
+		
+		JButton btnReporteUsuario = new JButton("Por Usuario");
+		btnReporteUsuario.setBounds(10, 10, 91, 20);
+		panelReportes.add(btnReporteUsuario);
+		
+		JButton btnReporteItem = new JButton("Por Item");
+		btnReporteItem.setBounds(104, 10, 91, 20);
+		panelReportes.add(btnReporteItem);
+		
+		JButton btnReporteCategoria = new JButton("Por Categoria");
+		btnReporteCategoria.setBounds(198, 10, 91, 20);
+		panelReportes.add(btnReporteCategoria);
+		
+		JButton btnReporteTipo = new JButton("Por Tipo");
+		btnReporteTipo.setBounds(292, 10, 84, 20);
+		panelReportes.add(btnReporteTipo);
 	}
 }
