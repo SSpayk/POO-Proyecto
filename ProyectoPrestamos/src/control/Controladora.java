@@ -101,18 +101,17 @@ public class Controladora implements Serializable {
 	    }
 	}
 	
-	public boolean borrarTipo(Integer indice) {
-	    if (indice == 0) {
-	        return false;
+	public boolean borrarItem(Integer indice) {
+	    Item item = items.get(indice);
+	    if (item.itemDisponible()) {
+	        item.getTipo().borrarItemTipo(item);
+	        for (Categoria c : item.getCategorias()) {
+	            c.borrarItemCategoria(item);
+	        }
+	        items.remove(item);
+	        return true;
 	    }
-	    Tipo t = tipos.get(indice);
-	    Tipo tipoGeneral = tipos.get(0);
-	    for (Item item : t.getItems()) {
-	        item.setTipo(tipoGeneral);
-	        tipoGeneral.agregarItemTipo(item);
-	    }
-	    tipos.remove(t);
-	    return true;
+	    return false;
 	}
 	
 	public Item consultarItem(Integer indice) {
@@ -159,9 +158,9 @@ public class Controladora implements Serializable {
 	    t.setNombre(nombre);
 	}
 	
-	public void borrarTipo(int indice) {
+	public boolean borrarTipo(Integer indice) {
 	    if (indice == 0) {
-	        return;
+	        return false;
 	    }
 	    Tipo t = tipos.get(indice);
 	    Tipo tipoGeneral = tipos.get(0);
@@ -170,7 +169,9 @@ public class Controladora implements Serializable {
 	        tipoGeneral.agregarItemTipo(item);
 	    }
 	    tipos.remove(t);
+	    return true;
 	}
+	
 	
 	public Tipo consultarTipo(Integer indice) {
 	    return tipos.get(indice);

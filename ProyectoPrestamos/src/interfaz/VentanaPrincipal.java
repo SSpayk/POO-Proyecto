@@ -1,8 +1,12 @@
 package interfaz;
 
 import java.awt.EventQueue;
+import java.awt.GridLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.BorderLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
@@ -11,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -87,6 +92,86 @@ public class VentanaPrincipal {
 			model.addRow(fila);
 		}
 	}
+	
+	private void crearUsuario() {
+		JTextField campoNombre = new JTextField();
+		JTextField campoNumero = new JTextField();
+		JTextField campoCorreo = new JTextField();
+		
+		JPanel panel = new JPanel(new GridLayout(3,2,5,10));
+		panel.add(new JLabel("Nombre:"));
+		panel.add(campoNombre);
+		panel.add(new JLabel("Numero"));
+		panel.add(campoNumero);
+		panel.add(new JLabel("Correo:"));
+		panel.add(campoCorreo);
+		
+		int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel,"Crear Usuario", JOptionPane.OK_CANCEL_OPTION);
+		if (respuesta == JOptionPane.OK_OPTION) {
+			String nombre = campoNombre.getText().trim();
+			String numero = campoNumero.getText().trim();
+			String correo = campoCorreo.getText().trim();
+			
+			Controladora control = Controladora.getInstance();
+			control.crearUsuario(nombre, numero, correo);
+			cargarUsuarios();
+		}
+	}
+	
+	private void modificarUsuario() {
+		int fila = tablaUsuarios.getSelectedRow();
+		if (fila ==-1) {
+			JOptionPane.showMessageDialog(framePrincipal,"Debe seleccionar un usuario.","Error",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		DefaultTableModel model = (DefaultTableModel) tablaUsuarios.getModel();
+		JTextField campoNombre = new JTextField((String) model.getValueAt(fila, 0));
+		JTextField campoNumero = new JTextField((String) model.getValueAt(fila, 1));
+		JTextField campoCorreo = new JTextField((String) model.getValueAt(fila, 0));
+		
+		JPanel panel = new JPanel(new GridLayout(3,2,5,10));
+		panel.add(new JLabel("Nombre:"));
+		panel.add(campoNombre);
+		panel.add(new JLabel("Numero"));
+		panel.add(campoNumero);
+		panel.add(new JLabel("Correo:"));
+		panel.add(campoCorreo);
+		
+		int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel,"Modificar Usuario", JOptionPane.OK_CANCEL_OPTION);
+		if (respuesta == JOptionPane.OK_OPTION) {
+			String nombre = campoNombre.getText().trim();
+			String numero = campoNumero.getText().trim();
+			String correo = campoCorreo.getText().trim();
+			
+			Controladora control = Controladora.getInstance();
+			control.modificarUsuario(fila,nombre,numero,correo);
+			cargarUsuarios();
+		}
+	}
+	
+	private void borrarUsuario() {
+		int fila = tablaUsuarios.getSelectedRow();
+		if (fila ==-1) {
+			JOptionPane.showMessageDialog(framePrincipal,"Debe seleccionar un usuario.","Error",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		DefaultTableModel model = (DefaultTableModel) tablaUsuarios.getModel();
+		String nombre = (String) model.getValueAt(fila, 0);
+		
+		int respuesta = JOptionPane.showConfirmDialog(framePrincipal,"Se eliminara al usuario "+nombre+".","Confirmar",JOptionPane.YES_NO_OPTION);
+		if (respuesta == JOptionPane.YES_OPTION) {
+			Controladora control = Controladora.getInstance();
+			boolean borrado = control.borrarUsuario(fila);
+			if (borrado) {
+				cargarUsuarios();
+			}else {
+				JOptionPane.showMessageDialog(framePrincipal,"No se puede borrar al usuario porque tiene prestamos activos","Error",JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
 
 	/**
 	 * Create the application.
@@ -121,6 +206,7 @@ public class VentanaPrincipal {
 		JButton btnCrearPersona = new JButton("Nuevo");
 		btnCrearPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				crearUsuario();
 			}
 		});
 		btnCrearPersona.setBounds(10, 10, 84, 20);
@@ -129,6 +215,7 @@ public class VentanaPrincipal {
 		JButton btnModificarPersona = new JButton("Modificar");
 		btnModificarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				modificarUsuario();
 			}
 		});
 		btnModificarPersona.setBounds(104, 10, 84, 20);
@@ -137,6 +224,7 @@ public class VentanaPrincipal {
 		JButton btnBorrarPersona = new JButton("Borrar");
 		btnBorrarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				borrarUsuario();
 			}
 		});
 		btnBorrarPersona.setBounds(198, 10, 84, 20);
