@@ -1,10 +1,11 @@
 package logica;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Prestamo {
+public class Prestamo implements Serializable {
 	private LocalDateTime fecha;
 	private Usuario usuario;
 	private List<Item> items;

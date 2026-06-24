@@ -1,9 +1,10 @@
 package logica;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
-public class Alerta {
+public class Alerta implements Serializable {
 	private LocalDateTime fecha;
 	private Boolean alarmaRecurrente;
 	private Integer repeticiones;

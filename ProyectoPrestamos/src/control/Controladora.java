@@ -1,5 +1,11 @@
 package control;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +17,8 @@ import logica.Prestamo;
 import logica.Tipo;
 import logica.Usuario;
 
-public class Controladora {
+public class Controladora implements Serializable {
+	private static Controladora instance = null;
 	private List<Usuario> usuarios;
 	private List<Prestamo> prestamos;
 	private List<Item> items;
@@ -26,6 +33,12 @@ public class Controladora {
 		categorias = new ArrayList<Categoria>();
 		
 		tipos.add(new Tipo("General"));
+	}
+	
+	public static Controladora getInstance() {
+		if(instance == null)
+			instance = new Controladora();
+		return instance;
 	}
 	
 	public void crearUsuario(String nombre, String numero, String correo) {
@@ -224,6 +237,22 @@ public class Controladora {
 
 	public List<Tipo> reportePorTipo() {
 	    return tipos;
+	}
+	
+	public static void guardarDatos() throws IOException {
+		FileOutputStream file = new FileOutputStream("DatosPrestamos.dat");
+		ObjectOutputStream stream = new ObjectOutputStream(file);
+		stream.writeObject(instance);
+		stream.close();
+		file.close();
+	}
+	
+	public static void cargarDatos() throws IOException, ClassNotFoundException {
+		FileInputStream file = new FileInputStream("DatosPrestamos.dat");
+		ObjectInputStream stream = new ObjectInputStream(file);
+		instance = (Controladora) stream.readObject();
+		stream.close();
+		file.close();
 	}
 
 }

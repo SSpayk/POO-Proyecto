@@ -1,9 +1,10 @@
 package logica;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Item {
+public class Item implements Serializable {
 	private String nombre;
 	private Integer codigo;
 	private String descripcion;
