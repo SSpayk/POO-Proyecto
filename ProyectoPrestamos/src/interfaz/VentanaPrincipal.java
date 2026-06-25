@@ -5,17 +5,23 @@ import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import java.awt.BorderLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -93,6 +99,7 @@ public class VentanaPrincipal {
 		}
 	}
 	
+	// Metodos para los usuarios
 	private void crearUsuario() {
 		JTextField campoNombre = new JTextField();
 		JTextField campoNumero = new JTextField();
@@ -172,6 +179,179 @@ public class VentanaPrincipal {
 		}
 	}
 	
+	private void consultarUsuario() {
+		int fila = tablaUsuarios.getSelectedRow();
+		if(fila == -1) {
+			JOptionPane.showMessageDialog(framePrincipal,"Debe seleccionar un usuario.","Error",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		DetalleUsuario dialogo = new DetalleUsuario(framePrincipal,fila);
+		dialogo.setVisible(true);
+	}
+	
+	// Metodos para los items
+	private void crearItem() {
+		Controladora control = Controladora.getInstance();
+		
+		JTextField campoNombre = new JTextField();
+		JTextField campoCodigo = new JTextField();
+		JTextField campoDescripcion = new JTextField();
+		
+		List<Tipo> tipos = control.listaTipos();
+		JComboBox<String> comboTipo = new JComboBox<String>();
+		for (Tipo t : tipos) {
+			comboTipo.addItem(t.getNombre());
+		}
+		
+		List<Categoria> categorias = control.listaCategorias();
+		DefaultListModel<String> modeloCategorias = new DefaultListModel<String>();
+		for (Categoria c : categorias) {
+			modeloCategorias.addElement(c.getNombre());
+		}
+		
+		JList<String> listaCategorias = new JList<>(modeloCategorias);
+		listaCategorias.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		JScrollPane scrollCategorias = new JScrollPane(listaCategorias);
+		scrollCategorias.setPreferredSize(new java.awt.Dimension(200,80));
+		
+		JPanel panel = new JPanel(new GridLayout(5,2,5,10));
+		panel.add(new JLabel("Nombre:"));
+		panel.add(campoNombre);
+		panel.add(new JLabel("Codigo:"));
+		panel.add(campoCodigo);
+		panel.add(new JLabel("Descripcion:"));
+		panel.add(campoDescripcion);
+		panel.add(new JLabel("Tipo:"));
+		panel.add(comboTipo);
+		panel.add(new JLabel("Categorias:"));
+		
+		int respuesta = JOptionPane.showConfirmDialog(framePrincipal,panel,"Nuevo Item",JOptionPane.OK_CANCEL_OPTION);
+		if (respuesta == JOptionPane.OK_OPTION) {
+		    String nombre = campoNombre.getText().trim();
+		    String descripcion = campoDescripcion.getText().trim();
+		    int indiceTipo = comboTipo.getSelectedIndex();
+
+		    try {
+		        Integer codigo = Integer.parseInt(campoCodigo.getText().trim());
+		        List<Categoria> categoriasSeleccionadas = new ArrayList<>();
+		        for (int i : listaCategorias.getSelectedIndices()) {
+		            categoriasSeleccionadas.add(categorias.get(i));
+		        }
+
+		        control.crearItem(nombre, codigo, descripcion, indiceTipo, categoriasSeleccionadas);
+		        cargarItems();
+		    } catch (NumberFormatException e) {
+		        JOptionPane.showMessageDialog(framePrincipal, "El codigo debe ser un numero.", "Error", JOptionPane.ERROR_MESSAGE);
+		    }
+		}
+		
+	}
+	
+	private void modificarItem() {
+	    int fila = tablaItems.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal, "Debe seleccionar un item.", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+
+	    Controladora control = Controladora.getInstance();
+	    Item item = control.consultarItem(fila);
+
+	    JTextField campoNombre = new JTextField(item.getNombre());
+	    JTextField campoCodigo = new JTextField(String.valueOf(item.getCodigo()));
+	    JTextField campoDescripcion = new JTextField(item.getDescripcion());
+
+	    
+	    List<Tipo> tipos = control.listaTipos();
+	    JComboBox<String> comboTipo = new JComboBox<>();
+	    for (Tipo t : tipos) {
+	        comboTipo.addItem(t.getNombre());
+	    }
+	    comboTipo.setSelectedIndex(tipos.indexOf(item.getTipo()));
+
+	    
+	    List<Categoria> categorias = control.listaCategorias();
+	    DefaultListModel<String> modeloCategorias = new DefaultListModel<>();
+	    for (Categoria c : categorias) {
+	        modeloCategorias.addElement(c.getNombre());
+	    }
+	    JList<String> listaCategorias = new JList<>(modeloCategorias);
+	    listaCategorias.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+	    
+	    List<Integer> indicesSeleccionados = new ArrayList<>();
+	    for (Categoria c : item.getCategorias()) {
+	        indicesSeleccionados.add(categorias.indexOf(c));
+	    }
+	    int[] indices = new int[indicesSeleccionados.size()];
+	    for (int i = 0; i < indices.length; i++) {
+	        indices[i] = indicesSeleccionados.get(i);
+	    }
+	    listaCategorias.setSelectedIndices(indices);
+
+	    JScrollPane scrollCategorias = new JScrollPane(listaCategorias);
+	    scrollCategorias.setPreferredSize(new java.awt.Dimension(200, 80));
+
+	    JPanel panel = new JPanel(new GridLayout(5, 2, 5, 10));
+	    panel.add(new JLabel("Nombre:"));
+	    panel.add(campoNombre);
+	    panel.add(new JLabel("Codigo:"));
+	    panel.add(campoCodigo);
+	    panel.add(new JLabel("Descripcion:"));
+	    panel.add(campoDescripcion);
+	    panel.add(new JLabel("Tipo:"));
+	    panel.add(comboTipo);
+	    panel.add(new JLabel("Categorias:"));
+	    panel.add(scrollCategorias);
+
+	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel, "Modificar Item", JOptionPane.OK_CANCEL_OPTION);
+	    if (respuesta == JOptionPane.OK_OPTION) {
+	        String nombre = campoNombre.getText().trim();
+	        String descripcion = campoDescripcion.getText().trim();
+	        int indiceTipo = comboTipo.getSelectedIndex();
+
+	        try {
+	            Integer codigo = Integer.parseInt(campoCodigo.getText().trim());
+
+	            List<Categoria> categoriasSeleccionadas = new ArrayList<>();
+	            for (int i : listaCategorias.getSelectedIndices()) {
+	                categoriasSeleccionadas.add(categorias.get(i));
+	            }
+
+	            control.modificarItem(fila, nombre, codigo, descripcion, indiceTipo, categoriasSeleccionadas);
+	            cargarItems();
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(framePrincipal, "El codigo debe ser un numero.", "Error", JOptionPane.ERROR_MESSAGE);
+	        }
+	    }
+	}
+	
+	private void borrarItem() {
+	    int fila = tablaItems.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal, "Debe seleccionar un item.", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+
+	    DefaultTableModel model = (DefaultTableModel) tablaItems.getModel();
+	    String nombre = (String) model.getValueAt(fila, 1);
+
+	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal,
+	            "Se eliminara el item " + nombre + ".",
+	            "Confirmar", JOptionPane.YES_NO_OPTION);
+	    if (respuesta == JOptionPane.YES_OPTION) {
+	        Controladora control = Controladora.getInstance();
+	        boolean borrado = control.borrarItem(fila);
+	        if (borrado) {
+	            cargarItems();
+	        } else {
+	            JOptionPane.showMessageDialog(framePrincipal,
+	                    "No se puede borrar el item porque esta en un prestamo activo.",
+	                    "Error", JOptionPane.ERROR_MESSAGE);
+	        }
+	    }
+	}
+	
 
 	/**
 	 * Create the application.
@@ -185,6 +365,7 @@ public class VentanaPrincipal {
 	 */
 	private void initialize() {
 		framePrincipal = new JFrame();
+		framePrincipal.setResizable(false);
 		framePrincipal.setBounds(100, 100, 667, 445);
 		framePrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		framePrincipal.getContentPane().setLayout(new BorderLayout(0, 0));
@@ -233,6 +414,7 @@ public class VentanaPrincipal {
 		JButton btnConsultarPersona = new JButton("Consultar");
 		btnConsultarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				consultarUsuario();
 			}
 		});
 		btnConsultarPersona.setBounds(292, 10, 84, 20);
@@ -269,6 +451,7 @@ public class VentanaPrincipal {
 		JButton btnCrearItem = new JButton("Nuevo");
 		btnCrearItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				crearItem();
 			}
 		});
 		btnCrearItem.setBounds(10, 10, 84, 20);
@@ -277,6 +460,7 @@ public class VentanaPrincipal {
 		JButton btnModificarItem = new JButton("Modificar");
 		btnModificarItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				modificarItem();
 			}
 		});
 		btnModificarItem.setBounds(104, 10, 84, 20);
@@ -285,6 +469,7 @@ public class VentanaPrincipal {
 		JButton btnBorrarItem = new JButton("Borrar");
 		btnBorrarItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				borrarItem();
 			}
 		});
 		btnBorrarItem.setBounds(198, 10, 84, 20);
