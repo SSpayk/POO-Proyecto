@@ -336,20 +336,166 @@ public class VentanaPrincipal {
 	    DefaultTableModel model = (DefaultTableModel) tablaItems.getModel();
 	    String nombre = (String) model.getValueAt(fila, 1);
 
-	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal,
-	            "Se eliminara el item " + nombre + ".",
-	            "Confirmar", JOptionPane.YES_NO_OPTION);
+	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal,"Se eliminara el item " + nombre + ".","Confirmar", JOptionPane.YES_NO_OPTION);
 	    if (respuesta == JOptionPane.YES_OPTION) {
 	        Controladora control = Controladora.getInstance();
 	        boolean borrado = control.borrarItem(fila);
 	        if (borrado) {
 	            cargarItems();
 	        } else {
-	            JOptionPane.showMessageDialog(framePrincipal,
-	                    "No se puede borrar el item porque esta en un prestamo activo.",
-	                    "Error", JOptionPane.ERROR_MESSAGE);
+	            JOptionPane.showMessageDialog(framePrincipal,"No se puede borrar el item porque esta en un prestamo activo.","Error", JOptionPane.ERROR_MESSAGE);
 	        }
 	    }
+	}
+	
+	private void consultarItem() {
+	    int fila = tablaItems.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal,"Debe seleccionar un item.","Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    DetalleItem dialogo = new DetalleItem(framePrincipal, fila);
+	    dialogo.setVisible(true);
+	}
+	
+	//Metodos para Categoria
+	private void crearCategoria() {
+	    JTextField campoNombre = new JTextField();
+
+	    JPanel panel = new JPanel(new GridLayout(1, 2, 5, 10));
+	    panel.add(new JLabel("Nombre:"));
+	    panel.add(campoNombre);
+
+	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel, "Nueva Categoria", JOptionPane.OK_CANCEL_OPTION);
+	    if (respuesta == JOptionPane.OK_OPTION) {
+	        String nombre = campoNombre.getText().trim();
+	        Controladora control = Controladora.getInstance();
+	        control.crearCategoria(nombre);
+	        cargarCategoria();
+	    }
+	}
+	
+	private void modificarCategoria() {
+	    int fila = tablaCategorias.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal, "Debe seleccionar una categoria.", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+
+	    DefaultTableModel model = (DefaultTableModel) tablaCategorias.getModel();
+	    JTextField campoNombre = new JTextField((String) model.getValueAt(fila, 0));
+
+	    JPanel panel = new JPanel(new GridLayout(1, 2, 5, 10));
+	    panel.add(new JLabel("Nombre:"));
+	    panel.add(campoNombre);
+
+	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel, "Modificar Categoria", JOptionPane.OK_CANCEL_OPTION);
+	    if (respuesta == JOptionPane.OK_OPTION) {
+	        String nombre = campoNombre.getText().trim();
+	        Controladora control = Controladora.getInstance();
+	        control.modificarCategoria(fila, nombre);
+	        cargarCategoria();
+	    }
+	}
+	
+	private void borrarCategoria() {
+	    int fila = tablaCategorias.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal, "Debe seleccionar una categoria.","Error",JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+
+	    DefaultTableModel model = (DefaultTableModel) tablaCategorias.getModel();
+	    String nombre = (String) model.getValueAt(fila, 0);
+
+	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal,"Se eliminara la categoria " + nombre + ".","Confirmar", JOptionPane.YES_NO_OPTION);
+	    if (respuesta == JOptionPane.YES_OPTION) {
+	        Controladora control = Controladora.getInstance();
+	        control.borrarCategoria(fila);
+	        cargarCategoria();
+	    }
+	}
+	
+	private void consultarCategoria() {
+	    int fila = tablaCategorias.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal, "Debe seleccionar una categoria.", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    DetalleCategoria dialogo = new DetalleCategoria(framePrincipal, fila);
+	    dialogo.setVisible(true);
+	}
+	
+	//Metodos para tipo
+	private void crearTipo() {
+	    JTextField campoNombre = new JTextField();
+
+	    JPanel panel = new JPanel(new GridLayout(1, 2, 5, 10));
+	    panel.add(new JLabel("Nombre:"));
+	    panel.add(campoNombre);
+
+	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel, "Nuevo Tipo", JOptionPane.OK_CANCEL_OPTION);
+	    if (respuesta == JOptionPane.OK_OPTION) {
+	        String nombre = campoNombre.getText().trim();
+	        Controladora control = Controladora.getInstance();
+	        control.crearTipo(nombre);
+	        cargarTipo();
+	    }
+	}
+	
+	private void modificarTipo() {
+	    int fila = tablaTipos.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal,"Debe seleccionar un tipo.","Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+
+	    DefaultTableModel model = (DefaultTableModel) tablaTipos.getModel();
+	    JTextField campoNombre = new JTextField((String) model.getValueAt(fila, 0));
+
+	    JPanel panel = new JPanel(new GridLayout(1, 2, 5, 10));
+	    panel.add(new JLabel("Nombre:"));
+	    panel.add(campoNombre);
+
+	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel,"Modificar Tipo", JOptionPane.OK_CANCEL_OPTION);
+	    if (respuesta == JOptionPane.OK_OPTION) {
+	        String nombre = campoNombre.getText().trim();
+	        Controladora control = Controladora.getInstance();
+	        control.modificarTipo(fila, nombre);
+	        cargarTipo();
+	    }
+	}
+	
+	private void borrarTipo() {
+	    int fila = tablaTipos.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal, "Debe seleccionar un tipo.", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+
+	    DefaultTableModel model = (DefaultTableModel) tablaTipos.getModel();
+	    String nombre = (String) model.getValueAt(fila, 0);
+
+	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal,"Se eliminara el tipo " + nombre + " y sus items pasaran al tipo General.","Confirmar", JOptionPane.YES_NO_OPTION);
+	    if (respuesta == JOptionPane.YES_OPTION) {
+	        Controladora control = Controladora.getInstance();
+	        boolean borrado = control.borrarTipo(fila);
+	        if (borrado) {
+	            cargarTipo();
+	        } else {
+	            JOptionPane.showMessageDialog(framePrincipal,"No se puede borrar el tipo General.","Error", JOptionPane.ERROR_MESSAGE);
+	        }
+	    }
+	}
+	
+	private void consultarTipo() {
+	    int fila = tablaTipos.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal, "Debe seleccionar un tipo.", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    DetalleTipo dialogo = new DetalleTipo(framePrincipal, fila);
+	    dialogo.setVisible(true);
 	}
 	
 
@@ -478,6 +624,7 @@ public class VentanaPrincipal {
 		JButton btnConsultarItem = new JButton("Consultar");
 		btnConsultarItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				consultarItem();
 			}
 		});
 		btnConsultarItem.setBounds(292, 10, 84, 20);
@@ -514,6 +661,7 @@ public class VentanaPrincipal {
 		JButton btnCrearCategoria = new JButton("Nueva");
 		btnCrearCategoria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				crearCategoria();
 			}
 		});
 		btnCrearCategoria.setBounds(10, 10, 84, 20);
@@ -522,6 +670,7 @@ public class VentanaPrincipal {
 		JButton btnModificarCategoria = new JButton("Modificar");
 		btnModificarCategoria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				modificarCategoria();
 			}
 		});
 		btnModificarCategoria.setBounds(104, 10, 84, 20);
@@ -530,6 +679,7 @@ public class VentanaPrincipal {
 		JButton btnBorrarCategoria = new JButton("Borrar");
 		btnBorrarCategoria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				borrarCategoria();
 			}
 		});
 		btnBorrarCategoria.setBounds(198, 10, 84, 20);
@@ -538,6 +688,7 @@ public class VentanaPrincipal {
 		JButton btnConsultarCategoria = new JButton("Consultar");
 		btnConsultarCategoria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				consultarCategoria();
 			}
 		});
 		btnConsultarCategoria.setBounds(292, 10, 84, 20);
@@ -572,6 +723,7 @@ public class VentanaPrincipal {
 		JButton btnCrearTipo = new JButton("Nuevo");
 		btnCrearTipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				crearTipo();
 			}
 		});
 		btnCrearTipo.setBounds(10, 10, 84, 20);
@@ -580,6 +732,7 @@ public class VentanaPrincipal {
 		JButton btnModificarTipo = new JButton("Modificar");
 		btnModificarTipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				modificarTipo();
 			}
 		});
 		btnModificarTipo.setBounds(104, 10, 84, 20);
@@ -588,6 +741,7 @@ public class VentanaPrincipal {
 		JButton btnBorrarTipo = new JButton("Borrar");
 		btnBorrarTipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				borrarTipo();
 			}
 		});
 		btnBorrarTipo.setBounds(198, 10, 84, 20);
@@ -596,6 +750,7 @@ public class VentanaPrincipal {
 		JButton btnConsultarTipo = new JButton("Consultar");
 		btnConsultarTipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				consultarTipo();
 			}
 		});
 		btnConsultarTipo.setBounds(292, 10, 84, 20);
