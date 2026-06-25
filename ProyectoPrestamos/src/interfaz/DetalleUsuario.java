@@ -95,11 +95,7 @@ public class DetalleUsuario extends JDialog {
         model.setRowCount(0);
         for (Prestamo p : prestamos) {
             String tieneAlerta = (p.getAlerta() != null) ? "Si" : "No";
-            model.addRow(new Object[] {
-                p.getFecha(),
-                p.obtenerItems().size(),
-                tieneAlerta
-            });
+            model.addRow(new Object[] {p.getFecha(),p.obtenerItems().size(),tieneAlerta});
         }
     }
 }

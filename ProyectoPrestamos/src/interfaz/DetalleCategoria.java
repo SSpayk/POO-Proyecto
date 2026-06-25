@@ -82,11 +82,7 @@ public class DetalleCategoria extends JDialog {
         DefaultTableModel model = (DefaultTableModel) tablaItems.getModel();
         model.setRowCount(0);
         for (Item item : items) {
-            model.addRow(new Object[] {
-                item.getCodigo(),
-                item.getNombre(),
-                item.getDescripcion()
-            });
+            model.addRow(new Object[] {item.getCodigo(),item.getNombre(),item.getDescripcion()});
         }
     }
 

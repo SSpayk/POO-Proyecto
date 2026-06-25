@@ -181,6 +181,10 @@ public class Controladora implements Serializable {
 		return tipos;
 	}
 	
+	public List<Prestamo> listaPrestamos() {
+	    return prestamos;
+	}
+	
 	public Prestamo hacerPrestamo(Integer indiceUsuario, List<Item> items) {
 	    Usuario u = usuarios.get(indiceUsuario);
 	    Prestamo p = new Prestamo(u);

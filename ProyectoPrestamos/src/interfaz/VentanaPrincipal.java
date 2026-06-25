@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import control.Controladora;
 import logica.Categoria;
 import logica.Item;
+import logica.Prestamo;
 import logica.Tipo;
 import logica.Usuario;
 
@@ -38,6 +39,8 @@ public class VentanaPrincipal {
 	private JTable tablaItems;
 	private JTable tablaCategorias;
 	private JTable tablaTipos;
+	private JTable tablaPrestamos;
+	private JScrollPane scrollPanePrestamos;
 
 	/**
 	 * Launch the application.
@@ -99,6 +102,19 @@ public class VentanaPrincipal {
 		}
 	}
 	
+	private void cargarPrestamo() {
+		Controladora control = Controladora.getInstance();
+		DefaultTableModel model = (DefaultTableModel) tablaPrestamos.getModel();
+		model.setRowCount(0);
+		List<Prestamo> listaPrestamos = control.listaPrestamos();
+		for (Prestamo prestamo : listaPrestamos) {
+			String tieneAlerta = (prestamo.getAlerta()!=null)?"Si":"No";
+			Object[] fila = new Object[] {prestamo.getUsuario().getNombre(),prestamo.getFecha(),prestamo.obtenerItems().size(),tieneAlerta};
+			model.addRow(fila);
+		} 
+		
+	}
+	
 	// Metodos para los usuarios
 	private void crearUsuario() {
 		JTextField campoNombre = new JTextField();
@@ -135,7 +151,7 @@ public class VentanaPrincipal {
 		DefaultTableModel model = (DefaultTableModel) tablaUsuarios.getModel();
 		JTextField campoNombre = new JTextField((String) model.getValueAt(fila, 0));
 		JTextField campoNumero = new JTextField((String) model.getValueAt(fila, 1));
-		JTextField campoCorreo = new JTextField((String) model.getValueAt(fila, 0));
+		JTextField campoCorreo = new JTextField((String) model.getValueAt(fila, 2));
 		
 		JPanel panel = new JPanel(new GridLayout(3,2,5,10));
 		panel.add(new JLabel("Nombre:"));
@@ -498,6 +514,32 @@ public class VentanaPrincipal {
 	    dialogo.setVisible(true);
 	}
 	
+	private void finalizarPrestamo() {
+	    int fila = tablaPrestamos.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal, "Debe seleccionar un prestamo.", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+
+	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal,"Se finalizara el prestamo y sus items quedaran disponibles.","Confirmar", JOptionPane.YES_NO_OPTION);
+	    if (respuesta == JOptionPane.YES_OPTION) {
+	        Controladora control = Controladora.getInstance();
+	        control.finalizarPrestamo(fila);
+	        cargarPrestamo();
+	    }
+	}
+	
+	private void consultarPrestamo() {
+	    int fila = tablaPrestamos.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(framePrincipal, "Debe seleccionar un prestamo.", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    DetallePrestamo dialogo = new DetallePrestamo(framePrincipal, fila);
+	    dialogo.setVisible(true);
+	    cargarPrestamo();
+	}
+	
 
 	/**
 	 * Create the application.
@@ -780,6 +822,54 @@ public class VentanaPrincipal {
 		
 		JPanel panelPrestamo = new JPanel();
 		tabbedPane.addTab("Prestamo", null, panelPrestamo, null);
+		panelPrestamo.setLayout(null);
+		
+		JButton btnNuevoPrestamo = new JButton("Nuevo");
+		btnNuevoPrestamo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				HacerPrestamo dialogo = new HacerPrestamo(framePrincipal);
+				dialogo.setVisible(true);
+				cargarPrestamo();
+			}
+		});
+		btnNuevoPrestamo.setBounds(10, 10, 94, 20);
+		panelPrestamo.add(btnNuevoPrestamo);
+		
+		JButton btnConsultarPrestamo = new JButton("Consultar");
+		btnConsultarPrestamo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				consultarPrestamo();
+			}
+		});
+		btnConsultarPrestamo.setBounds(114, 10, 94, 20);
+		panelPrestamo.add(btnConsultarPrestamo);
+		
+		JButton btnFinalizarPrestamo = new JButton("Finalizar");
+		btnFinalizarPrestamo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				finalizarPrestamo();
+			}
+		});
+		btnFinalizarPrestamo.setBounds(218, 10, 94, 20);
+		panelPrestamo.add(btnFinalizarPrestamo);
+		
+		scrollPanePrestamos = new JScrollPane();
+		scrollPanePrestamos.setBounds(10, 40, 628, 331);
+		panelPrestamo.add(scrollPanePrestamos);
+		
+		tablaPrestamos = new JTable();
+		tablaPrestamos.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Usuario", "Fecha", "Numero de Items", "Tiene Alerta"
+			}
+		));
+		tablaPrestamos.getColumnModel().getColumn(0).setPreferredWidth(180);
+		tablaPrestamos.getColumnModel().getColumn(1).setPreferredWidth(170);
+		tablaPrestamos.getColumnModel().getColumn(2).setPreferredWidth(152);
+		tablaPrestamos.getColumnModel().getColumn(3).setPreferredWidth(144);
+		scrollPanePrestamos.setViewportView(tablaPrestamos);
 		
 		JPanel panelReportes = new JPanel();
 		tabbedPane.addTab("Reportes", null, panelReportes, null);
