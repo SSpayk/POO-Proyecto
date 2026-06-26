@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.*;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -142,8 +143,18 @@ public class HacerPrestamo extends JDialog {
             boolean activo = checkAlerta.isSelected();
             campoFecha.setEnabled(activo);
             checkRecurrente.setEnabled(activo);
-            campoRepeticiones.setEnabled(activo);
-            campoIntervalo.setEnabled(activo);
+
+            if (!activo) {
+                checkRecurrente.setSelected(false);
+                campoRepeticiones.setEnabled(false);
+                campoIntervalo.setEnabled(false);
+            }
+        });
+
+        checkRecurrente.addActionListener(e -> {
+            boolean recurrente = checkRecurrente.isSelected();
+            campoRepeticiones.setEnabled(recurrente);
+            campoIntervalo.setEnabled(recurrente);
         });
 
         {
@@ -234,11 +245,18 @@ public class HacerPrestamo extends JDialog {
 
         if (checkAlerta.isSelected()) {
             try {
-                LocalDate fecha = LocalDate.parse(campoFecha.getText().trim());
+                DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                LocalDate fecha = LocalDate.parse(campoFecha.getText().trim(), formato);
                 LocalDateTime fechaAlerta = fecha.atStartOfDay();
+
                 boolean recurrente = checkRecurrente.isSelected();
-                int repeticiones = Integer.parseInt(campoRepeticiones.getText().trim());
-                int intervalo = Integer.parseInt(campoIntervalo.getText().trim());
+                int repeticiones = 0;
+                int intervalo = 0;
+
+                if (recurrente) {
+                    repeticiones = Integer.parseInt(campoRepeticiones.getText().trim());
+                    intervalo = Integer.parseInt(campoIntervalo.getText().trim());
+                }
 
                 int indicePrestamo = control.listaPrestamos().indexOf(prestamo);
                 control.crearAlerta(indicePrestamo, fechaAlerta, recurrente, repeticiones, intervalo);

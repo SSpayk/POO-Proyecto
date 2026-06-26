@@ -32,7 +32,11 @@ public class Controladora implements Serializable {
 		tipos = new ArrayList<Tipo>();
 		categorias = new ArrayList<Categoria>();
 		
-		tipos.add(new Tipo("General"));
+		try {
+			tipos.add(new Tipo("General"));
+		} catch (Exception e) {
+			
+		}
 	}
 	
 	public static Controladora getInstance() {
@@ -41,12 +45,12 @@ public class Controladora implements Serializable {
 		return instance;
 	}
 	
-	public void crearUsuario(String nombre, String numero, String correo) {
+	public void crearUsuario(String nombre, String numero, String correo) throws Exception {
 		Usuario u = new Usuario(nombre,numero,correo);
 		usuarios.add(u);
 	}
 	
-	public void modificarUsuario(Integer indice,String nombre,String numero,String correo) {
+	public void modificarUsuario(Integer indice,String nombre,String numero,String correo) throws Exception {
 		Usuario u = usuarios.get(indice);
 		u.setNombre(nombre);
 		u.setNumero(numero);
@@ -122,12 +126,12 @@ public class Controladora implements Serializable {
 		return items;
 	}
 	
-	public void crearCategoria(String nombre) {
+	public void crearCategoria(String nombre) throws Exception {
 	    Categoria c = new Categoria(nombre);
 	    categorias.add(c);
 	}
 	
-	public void modificarCategoria(Integer indice, String nombre) {
+	public void modificarCategoria(Integer indice, String nombre) throws Exception {
 	    Categoria c = categorias.get(indice);
 	    c.setNombre(nombre);
 	}
@@ -148,12 +152,12 @@ public class Controladora implements Serializable {
 		return categorias;
 	}
 	
-	public void crearTipo(String nombre) {
+	public void crearTipo(String nombre) throws Exception {
 	    Tipo t = new Tipo(nombre);
 	    tipos.add(t);
 	}
 	
-	public void modificarTipo(Integer indice, String nombre) {
+	public void modificarTipo(Integer indice, String nombre) throws Exception {
 	    Tipo t = tipos.get(indice);
 	    t.setNombre(nombre);
 	}

@@ -131,13 +131,17 @@ public class VentanaPrincipal {
 		
 		int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel,"Crear Usuario", JOptionPane.OK_CANCEL_OPTION);
 		if (respuesta == JOptionPane.OK_OPTION) {
-			String nombre = campoNombre.getText().trim();
-			String numero = campoNumero.getText().trim();
-			String correo = campoCorreo.getText().trim();
-			
-			Controladora control = Controladora.getInstance();
-			control.crearUsuario(nombre, numero, correo);
-			cargarUsuarios();
+		    String nombre = campoNombre.getText().trim();
+		    String numero = campoNumero.getText().trim();
+		    String correo = campoCorreo.getText().trim();
+
+		    try {
+		        Controladora control = Controladora.getInstance();
+		        control.crearUsuario(nombre, numero, correo);
+		        cargarUsuarios();
+		    } catch (Exception ex) {
+		        JOptionPane.showMessageDialog(framePrincipal, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		    }
 		}
 	}
 	
@@ -163,13 +167,17 @@ public class VentanaPrincipal {
 		
 		int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel,"Modificar Usuario", JOptionPane.OK_CANCEL_OPTION);
 		if (respuesta == JOptionPane.OK_OPTION) {
-			String nombre = campoNombre.getText().trim();
-			String numero = campoNumero.getText().trim();
-			String correo = campoCorreo.getText().trim();
-			
-			Controladora control = Controladora.getInstance();
-			control.modificarUsuario(fila,nombre,numero,correo);
-			cargarUsuarios();
+		    String nombre = campoNombre.getText().trim();
+		    String numero = campoNumero.getText().trim();
+		    String correo = campoCorreo.getText().trim();
+
+		    try {
+		        Controladora control = Controladora.getInstance();
+		        control.modificarUsuario(fila, nombre, numero, correo);
+		        cargarUsuarios();
+		    } catch (Exception ex) {
+		        JOptionPane.showMessageDialog(framePrincipal, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		    }
 		}
 	}
 	
@@ -240,6 +248,7 @@ public class VentanaPrincipal {
 		panel.add(new JLabel("Tipo:"));
 		panel.add(comboTipo);
 		panel.add(new JLabel("Categorias:"));
+		panel.add(scrollCategorias);
 		
 		int respuesta = JOptionPane.showConfirmDialog(framePrincipal,panel,"Nuevo Item",JOptionPane.OK_CANCEL_OPTION);
 		if (respuesta == JOptionPane.OK_OPTION) {
@@ -249,7 +258,7 @@ public class VentanaPrincipal {
 
 		    try {
 		        Integer codigo = Integer.parseInt(campoCodigo.getText().trim());
-		        List<Categoria> categoriasSeleccionadas = new ArrayList<>();
+		        List<Categoria> categoriasSeleccionadas = new ArrayList<Categoria>();
 		        for (int i : listaCategorias.getSelectedIndices()) {
 		            categoriasSeleccionadas.add(categorias.get(i));
 		        }
@@ -291,11 +300,11 @@ public class VentanaPrincipal {
 	    for (Categoria c : categorias) {
 	        modeloCategorias.addElement(c.getNombre());
 	    }
-	    JList<String> listaCategorias = new JList<>(modeloCategorias);
+	    JList<String> listaCategorias = new JList<String>(modeloCategorias);
 	    listaCategorias.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
 	    
-	    List<Integer> indicesSeleccionados = new ArrayList<>();
+	    List<Integer> indicesSeleccionados = new ArrayList<Integer>();
 	    for (Categoria c : item.getCategorias()) {
 	        indicesSeleccionados.add(categorias.indexOf(c));
 	    }
@@ -385,9 +394,13 @@ public class VentanaPrincipal {
 	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel, "Nueva Categoria", JOptionPane.OK_CANCEL_OPTION);
 	    if (respuesta == JOptionPane.OK_OPTION) {
 	        String nombre = campoNombre.getText().trim();
-	        Controladora control = Controladora.getInstance();
-	        control.crearCategoria(nombre);
-	        cargarCategoria();
+	        try {
+	            Controladora control = Controladora.getInstance();
+	            control.crearCategoria(nombre);
+	            cargarCategoria();
+	        } catch (Exception ex) {
+	            JOptionPane.showMessageDialog(framePrincipal, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        }
 	    }
 	}
 	
@@ -408,9 +421,13 @@ public class VentanaPrincipal {
 	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel, "Modificar Categoria", JOptionPane.OK_CANCEL_OPTION);
 	    if (respuesta == JOptionPane.OK_OPTION) {
 	        String nombre = campoNombre.getText().trim();
-	        Controladora control = Controladora.getInstance();
-	        control.modificarCategoria(fila, nombre);
-	        cargarCategoria();
+	        try {
+	            Controladora control = Controladora.getInstance();
+	            control.modificarCategoria(fila, nombre);
+	            cargarCategoria();
+	        } catch (Exception ex) {
+	            JOptionPane.showMessageDialog(framePrincipal, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        }
 	    }
 	}
 	
@@ -453,9 +470,13 @@ public class VentanaPrincipal {
 	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel, "Nuevo Tipo", JOptionPane.OK_CANCEL_OPTION);
 	    if (respuesta == JOptionPane.OK_OPTION) {
 	        String nombre = campoNombre.getText().trim();
-	        Controladora control = Controladora.getInstance();
-	        control.crearTipo(nombre);
-	        cargarTipo();
+	        try {
+	            Controladora control = Controladora.getInstance();
+	            control.crearTipo(nombre);
+	            cargarTipo();
+	        } catch (Exception ex) {
+	            JOptionPane.showMessageDialog(framePrincipal, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        }
 	    }
 	}
 	
@@ -463,6 +484,11 @@ public class VentanaPrincipal {
 	    int fila = tablaTipos.getSelectedRow();
 	    if (fila == -1) {
 	        JOptionPane.showMessageDialog(framePrincipal,"Debe seleccionar un tipo.","Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    
+	    if (fila == 0) {
+	        JOptionPane.showMessageDialog(framePrincipal,"No se puede modificar el tipo General.", "Error", JOptionPane.ERROR_MESSAGE);
 	        return;
 	    }
 
@@ -476,9 +502,13 @@ public class VentanaPrincipal {
 	    int respuesta = JOptionPane.showConfirmDialog(framePrincipal, panel,"Modificar Tipo", JOptionPane.OK_CANCEL_OPTION);
 	    if (respuesta == JOptionPane.OK_OPTION) {
 	        String nombre = campoNombre.getText().trim();
-	        Controladora control = Controladora.getInstance();
-	        control.modificarTipo(fila, nombre);
-	        cargarTipo();
+	        try {
+	            Controladora control = Controladora.getInstance();
+	            control.modificarTipo(fila, nombre);
+	            cargarTipo();
+	        } catch (Exception ex) {
+	            JOptionPane.showMessageDialog(framePrincipal, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        }
 	    }
 	}
 	
@@ -540,12 +570,134 @@ public class VentanaPrincipal {
 	    cargarPrestamo();
 	}
 	
+	private String generarReporteUsuarios() {
+	    Controladora control = Controladora.getInstance();
+	    List<Usuario> usuarios = new ArrayList<Usuario>(control.reportePorUsuario());
+
+	    // ordenar alfabeticamente por nombre
+	    usuarios.sort((u1, u2) -> u1.getNombre().compareToIgnoreCase(u2.getNombre()));
+
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("REPORTE POR USUARIO\n");
+	    sb.append("===================\n\n");
+
+	    for (Usuario u : usuarios) {
+	        sb.append("Usuario: ").append(u.getNombre()).append("\n");
+	        sb.append("  Telefono: ").append(u.getNumero()).append("\n");
+	        sb.append("  Correo: ").append(u.getCorreo()).append("\n");
+
+	        List<Prestamo> prestamos = u.getPrestamos();
+	        if (prestamos.isEmpty()) {
+	            sb.append("  (sin prestamos)\n");
+	        } else {
+	            sb.append("  Prestamos:\n");
+	            for (Prestamo p : prestamos) {
+	                sb.append("    - Fecha: ").append(p.getFecha()).append(" | Items: ").append(p.obtenerItems().size()).append("\n");
+	            }
+	        }
+	        sb.append("\n");
+	    }
+
+	    return sb.toString();
+	}
+	
+	private String generarReporteItems() {
+	    Controladora control = Controladora.getInstance();
+	    List<Item> items = new ArrayList<Item>(control.reportePorItem());
+
+	    items.sort((i1, i2) -> i1.getNombre().compareToIgnoreCase(i2.getNombre()));
+
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("REPORTE POR ITEM\n");
+	    sb.append("================\n\n");
+
+	    for (Item item : items) {
+	        sb.append("Item: ").append(item.getNombre()).append("\n");
+	        sb.append("  Codigo: ").append(item.getCodigo()).append("\n");
+	        sb.append("  Descripcion: ").append(item.getDescripcion()).append("\n");
+	        sb.append("  Tipo: ").append(item.getTipo().getNombre()).append("\n");
+
+	        if (item.itemDisponible()) {
+	            sb.append("  Estado: Disponible\n");
+	        } else {
+	            sb.append("  Estado: Prestado a: ").append(item.obtenerPrestamo().getUsuario().getNombre()).append("\n");
+	        }
+	        sb.append("\n");
+	    }
+
+	    return sb.toString();
+	}
+	
+	private String generarReporteCategorias() {
+	    Controladora control = Controladora.getInstance();
+	    List<Categoria> categorias = new ArrayList<>(control.reportePorCategoria());
+
+	    categorias.sort((c1, c2) -> c1.getNombre().compareToIgnoreCase(c2.getNombre()));
+
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("REPORTE POR CATEGORIA\n");
+	    sb.append("=====================\n\n");
+
+	    for (Categoria c : categorias) {
+	        sb.append("Categoria: ").append(c.getNombre()).append("\n");
+
+	        List<Item> items = c.getItems();
+	        if (items.isEmpty()) {
+	            sb.append("  (sin items)\n");
+	        } else {
+	            for (Item item : items) {
+	                sb.append("  - ").append(item.getNombre()).append(" (codigo ").append(item.getCodigo()).append(")\n");
+	            }
+	        }
+	        sb.append("\n");
+	    }
+
+	    return sb.toString();
+	}
+	
+	private String generarReporteTipos() {
+	    Controladora control = Controladora.getInstance();
+	    List<Tipo> tipos = new ArrayList<>(control.reportePorTipo());
+
+	    tipos.sort((t1, t2) -> t1.getNombre().compareToIgnoreCase(t2.getNombre()));
+
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("REPORTE POR TIPO\n");
+	    sb.append("================\n\n");
+
+	    for (Tipo t : tipos) {
+	        sb.append("Tipo: ").append(t.getNombre()).append("\n");
+
+	        List<Item> items = t.getItems();
+	        if (items.isEmpty()) {
+	            sb.append("  (sin items)\n");
+	        } else {
+	            for (Item item : items) {
+	                sb.append("  - ").append(item.getNombre()).append(" (codigo ").append(item.getCodigo()).append(")\n");
+	            }
+	        }
+	        sb.append("\n");
+	    }
+
+	    return sb.toString();
+	}
+	
 
 	/**
 	 * Create the application.
 	 */
 	public VentanaPrincipal() {
 		initialize();
+		try {
+			Controladora.cargarDatos();
+		}catch (Exception e) {
+			
+		}
+		cargarUsuarios();
+		cargarItems();
+		cargarCategoria();
+		cargarTipo();
+		cargarPrestamo();
 	}
 
 	/**
@@ -555,7 +707,17 @@ public class VentanaPrincipal {
 		framePrincipal = new JFrame();
 		framePrincipal.setResizable(false);
 		framePrincipal.setBounds(100, 100, 667, 445);
-		framePrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		framePrincipal.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		framePrincipal.addWindowListener(new java.awt.event.WindowAdapter() {
+		    public void windowClosing(java.awt.event.WindowEvent e) {
+		        try {
+		            Controladora.guardarDatos();
+		        } catch (Exception ex) {
+		            JOptionPane.showMessageDialog(framePrincipal, "Error al guardar: " + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+		        }
+		        System.exit(0);
+		    }
+		});
 		framePrincipal.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -578,7 +740,7 @@ public class VentanaPrincipal {
 				crearUsuario();
 			}
 		});
-		btnCrearPersona.setBounds(10, 10, 84, 20);
+		btnCrearPersona.setBounds(10, 10, 94, 20);
 		panelUsuarios.add(btnCrearPersona);
 		
 		JButton btnModificarPersona = new JButton("Modificar");
@@ -587,7 +749,7 @@ public class VentanaPrincipal {
 				modificarUsuario();
 			}
 		});
-		btnModificarPersona.setBounds(104, 10, 84, 20);
+		btnModificarPersona.setBounds(114, 10, 94, 20);
 		panelUsuarios.add(btnModificarPersona);
 		
 		JButton btnBorrarPersona = new JButton("Borrar");
@@ -596,7 +758,7 @@ public class VentanaPrincipal {
 				borrarUsuario();
 			}
 		});
-		btnBorrarPersona.setBounds(198, 10, 84, 20);
+		btnBorrarPersona.setBounds(218, 10, 94, 20);
 		panelUsuarios.add(btnBorrarPersona);
 		
 		JButton btnConsultarPersona = new JButton("Consultar");
@@ -605,7 +767,7 @@ public class VentanaPrincipal {
 				consultarUsuario();
 			}
 		});
-		btnConsultarPersona.setBounds(292, 10, 84, 20);
+		btnConsultarPersona.setBounds(322, 10, 94, 20);
 		panelUsuarios.add(btnConsultarPersona);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -642,7 +804,7 @@ public class VentanaPrincipal {
 				crearItem();
 			}
 		});
-		btnCrearItem.setBounds(10, 10, 84, 20);
+		btnCrearItem.setBounds(10, 10, 94, 20);
 		panelItems.add(btnCrearItem);
 		
 		JButton btnModificarItem = new JButton("Modificar");
@@ -651,7 +813,7 @@ public class VentanaPrincipal {
 				modificarItem();
 			}
 		});
-		btnModificarItem.setBounds(104, 10, 84, 20);
+		btnModificarItem.setBounds(114, 10, 94, 20);
 		panelItems.add(btnModificarItem);
 		
 		JButton btnBorrarItem = new JButton("Borrar");
@@ -660,7 +822,7 @@ public class VentanaPrincipal {
 				borrarItem();
 			}
 		});
-		btnBorrarItem.setBounds(198, 10, 84, 20);
+		btnBorrarItem.setBounds(218, 10, 94, 20);
 		panelItems.add(btnBorrarItem);
 		
 		JButton btnConsultarItem = new JButton("Consultar");
@@ -669,7 +831,7 @@ public class VentanaPrincipal {
 				consultarItem();
 			}
 		});
-		btnConsultarItem.setBounds(292, 10, 84, 20);
+		btnConsultarItem.setBounds(322, 10, 94, 20);
 		panelItems.add(btnConsultarItem);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -706,7 +868,7 @@ public class VentanaPrincipal {
 				crearCategoria();
 			}
 		});
-		btnCrearCategoria.setBounds(10, 10, 84, 20);
+		btnCrearCategoria.setBounds(10, 10, 94, 20);
 		panelCategorias.add(btnCrearCategoria);
 		
 		JButton btnModificarCategoria = new JButton("Modificar");
@@ -715,7 +877,7 @@ public class VentanaPrincipal {
 				modificarCategoria();
 			}
 		});
-		btnModificarCategoria.setBounds(104, 10, 84, 20);
+		btnModificarCategoria.setBounds(114, 10, 94, 20);
 		panelCategorias.add(btnModificarCategoria);
 		
 		JButton btnBorrarCategoria = new JButton("Borrar");
@@ -724,7 +886,7 @@ public class VentanaPrincipal {
 				borrarCategoria();
 			}
 		});
-		btnBorrarCategoria.setBounds(198, 10, 84, 20);
+		btnBorrarCategoria.setBounds(218, 10, 94, 20);
 		panelCategorias.add(btnBorrarCategoria);
 		
 		JButton btnConsultarCategoria = new JButton("Consultar");
@@ -733,7 +895,7 @@ public class VentanaPrincipal {
 				consultarCategoria();
 			}
 		});
-		btnConsultarCategoria.setBounds(292, 10, 84, 20);
+		btnConsultarCategoria.setBounds(322, 10, 94, 20);
 		panelCategorias.add(btnConsultarCategoria);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
@@ -768,7 +930,7 @@ public class VentanaPrincipal {
 				crearTipo();
 			}
 		});
-		btnCrearTipo.setBounds(10, 10, 84, 20);
+		btnCrearTipo.setBounds(10, 10, 94, 20);
 		panelTipos.add(btnCrearTipo);
 		
 		JButton btnModificarTipo = new JButton("Modificar");
@@ -777,7 +939,7 @@ public class VentanaPrincipal {
 				modificarTipo();
 			}
 		});
-		btnModificarTipo.setBounds(104, 10, 84, 20);
+		btnModificarTipo.setBounds(114, 10, 94, 20);
 		panelTipos.add(btnModificarTipo);
 		
 		JButton btnBorrarTipo = new JButton("Borrar");
@@ -786,7 +948,7 @@ public class VentanaPrincipal {
 				borrarTipo();
 			}
 		});
-		btnBorrarTipo.setBounds(198, 10, 84, 20);
+		btnBorrarTipo.setBounds(218, 10, 94, 20);
 		panelTipos.add(btnBorrarTipo);
 		
 		JButton btnConsultarTipo = new JButton("Consultar");
@@ -795,7 +957,7 @@ public class VentanaPrincipal {
 				consultarTipo();
 			}
 		});
-		btnConsultarTipo.setBounds(292, 10, 84, 20);
+		btnConsultarTipo.setBounds(322, 10, 94, 20);
 		panelTipos.add(btnConsultarTipo);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
@@ -876,19 +1038,47 @@ public class VentanaPrincipal {
 		panelReportes.setLayout(null);
 		
 		JButton btnReporteUsuario = new JButton("Por Usuario");
-		btnReporteUsuario.setBounds(10, 10, 91, 20);
+		btnReporteUsuario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String contenido = generarReporteUsuarios();
+				Reportes dialogo = new Reportes(framePrincipal,"Reporte por Usuario",contenido);
+				dialogo.setVisible(true);
+			}
+		});
+		btnReporteUsuario.setBounds(191, 121, 133, 36);
 		panelReportes.add(btnReporteUsuario);
 		
 		JButton btnReporteItem = new JButton("Por Item");
-		btnReporteItem.setBounds(104, 10, 91, 20);
+		btnReporteItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String contenido = generarReporteItems();
+		        Reportes dialogo = new Reportes(framePrincipal,"Reporte por Item",contenido);
+		        dialogo.setVisible(true);
+			}
+		});
+		btnReporteItem.setBounds(334, 121, 127, 36);
 		panelReportes.add(btnReporteItem);
 		
 		JButton btnReporteCategoria = new JButton("Por Categoria");
-		btnReporteCategoria.setBounds(198, 10, 91, 20);
+		btnReporteCategoria.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String contenido = generarReporteCategorias();
+		        Reportes dialogo = new Reportes(framePrincipal,"Reporte por Categoria",contenido);
+		        dialogo.setVisible(true);
+			}
+		});
+		btnReporteCategoria.setBounds(191, 167, 133, 36);
 		panelReportes.add(btnReporteCategoria);
 		
 		JButton btnReporteTipo = new JButton("Por Tipo");
-		btnReporteTipo.setBounds(292, 10, 84, 20);
+		btnReporteTipo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String contenido = generarReporteTipos();
+		        Reportes dialogo = new Reportes(framePrincipal,"Reporte por Tipo",contenido);
+		        dialogo.setVisible(true);
+			}
+		});
+		btnReporteTipo.setBounds(334, 167, 127, 36);
 		panelReportes.add(btnReporteTipo);
 	}
 }

@@ -71,6 +71,10 @@ public class Item implements Serializable {
 		
 	}
 	
+	public Prestamo obtenerPrestamo() {
+		return prestamo;
+	}
+	
 	public void agregarAPrestamo(Prestamo prestamo) {
 	    this.prestamo = prestamo;
 	}
